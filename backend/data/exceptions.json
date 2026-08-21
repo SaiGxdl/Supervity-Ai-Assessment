@@ -51,6 +51,11 @@
         "timestamp": "2026-08-21T19:22:14Z",
         "event": "Reviewer chat query: 'Why was this flagged?...'",
         "actor": "Human Reviewer"
+      },
+      {
+        "timestamp": "2026-08-21T19:26:04Z",
+        "event": "AI Explanation generated and requested by reviewer",
+        "actor": "AI Employee"
       }
     ],
     "resolved_at": "2026-08-21T19:22:14Z",
@@ -98,6 +103,11 @@
         "timestamp": "2026-08-21T19:22:14Z",
         "event": "Status updated to 'ExceptionStatus.RESOLVED' (Manually verified)",
         "actor": "Human Reviewer"
+      },
+      {
+        "timestamp": "2026-08-21T19:26:22Z",
+        "event": "AI Explanation generated and requested by reviewer",
+        "actor": "AI Employee"
       }
     ],
     "resolved_at": "2026-08-21T19:22:14Z",
