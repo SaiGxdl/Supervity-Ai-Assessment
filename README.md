@@ -53,9 +53,10 @@ Key capabilities:
 
 ## ⚙️ 4. Key Decisions
 
-### A. Separation of Control vs. Intelligence
+### A. Separation of Control vs. Intelligence & State
 - **Python = Control**: Enforces variance math, exception classification, and strict confidence policy guardrails ($\ge 90\%$ auto-resolution). The LLM does **NOT** decide auto-resolution eligibility.
 - **LLM = Intelligence**: Generates structured, plain-English root cause explanations citing line-item evidence and handles contextual Q&A chat.
+- **JSON = State**: The prototype uses JSON persistence for simplicity and reproducibility; the data-store layer can be replaced with SQLite or another persistent datastore in a production implementation.
 
 ### B. Deterministic Confidence Score Formula
 Confidence is calculated deterministically via Python business rules:
@@ -131,6 +132,6 @@ python backend/tests/test_policy_engine.py
 ## ⚖️ 9. Tradeoffs
 
 1. **Request-Driven State Updates**: Uses REST API request-driven UI updates following reviewer actions rather than complex WebSocket streaming infrastructure.
-2. **JSON Data Store**: The current prototype uses JSON-based persistence for simplicity and reproducibility, with a straightforward path to SQLite or another persistent datastore for production use.
+2. **JSON Data Store**: The prototype uses JSON persistence for simplicity and reproducibility; the data-store layer can be replaced with SQLite or another persistent datastore in a production implementation.
 3. **Single-Tenant Prototype**: Focuses on core exception governance, decision rules, and AI interaction over full multi-tenant auth/RBAC infrastructure.
 4. **Deterministic Policy Control vs. Autonomous LLM Execution**: We chose deterministic Python policy threshold enforcement over allowing the LLM to authorize auto-resolutions. This eliminates hallucinated status transitions while leveraging the LLM for explanations, evidence extraction, and recommendation intelligence.
