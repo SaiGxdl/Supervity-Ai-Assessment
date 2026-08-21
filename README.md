@@ -125,5 +125,5 @@ npm run dev
 ## ⚖️ 9. Tradeoffs
 
 1. **Request-Driven State Updates**: Uses REST API request-driven UI updates following reviewer actions rather than complex WebSocket streaming infrastructure.
-2. **File Data Store**: Uses a file-backed JSON store for zero-dependency setup and 1-click baseline resets, trading off database ACID concurrency.
+2. **JSON Data Store**: The current prototype uses JSON-based persistence for simplicity and reproducibility, with a straightforward path to SQLite or another persistent datastore for production use.
 3. **Single-Tenant Prototype**: Focuses on core exception governance, decision rules, and AI interaction over full multi-tenant auth/RBAC infrastructure.
