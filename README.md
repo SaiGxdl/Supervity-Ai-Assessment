@@ -1,7 +1,7 @@
 # Real-Time Exception Resolution Workbench
 > **Supervity FDE Assessment — Problem Statement 9: AI Employee for Exception Resolution**
 
-An enterprise-grade, human-in-the-loop **Exception Resolution Workbench** designed for Accounts Payable (AP) invoice & purchase order (PO) exception processing. 
+An enterprise-oriented prototype, human-in-the-loop **Exception Resolution Workbench** designed for Accounts Payable (AP) invoice & purchase order (PO) exception processing. 
 
 The architecture strictly separates **Deterministic Control** (Python business rules and confidence threshold policy enforcement) from **AI Employee Intelligence** (LLM explanations, evidence extraction, and contextual chat), presented through a **React + Vite executive dashboard**.
 
