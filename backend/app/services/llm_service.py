@@ -12,14 +12,15 @@ from app.services.exception_engine import ExceptionEngine
 
 class LLMService:
     def __init__(self):
-        self.api_key = os.getenv("OPENAI_API_KEY", "")
+        self.api_key = os.getenv("GEMINI_API_KEY", "")
         self.client = None
         if self.api_key:
             try:
-                from openai import OpenAI
-                self.client = OpenAI(api_key=self.api_key)
+                from google import genai
+                self.client = genai.Client(api_key=self.api_key)
+                print("[LLMService] Gemini client initialized successfully.")
             except Exception as e:
-                print(f"[LLMService] Failed to initialize OpenAI client: {e}")
+                print(f"[LLMService] Failed to initialize Gemini client: {e}")
 
     def generate_explanation(self, item: Dict[str, Any], query: str = None) -> ExplainResponse:
         evidence = ExceptionEngine.extract_evidence_facts(item)
@@ -32,45 +33,40 @@ class LLMService:
         conf = item.get("confidence_score", 0.85)
         policy = item.get("policy_action", PolicyAction.SUGGEST)
 
-        # Attempt OpenAI structured completion if client available
+        # Attempt Gemini structured completion if client available
         if self.client:
             try:
-                prompt = f"""
-                You are an enterprise AP Exception Resolution Assistant.
-                Analyze this transaction exception and provide a clear, source-grounded explanation.
+                prompt = f"""You are an enterprise AP Exception Resolution Assistant.
+Analyze this transaction exception and provide a clear, source-grounded explanation.
 
-                Verified Grounding Facts (Extracted directly from transaction record):
-                - Transaction ID: {item.get('id')}
-                - Vendor: {vendor}
-                - PO Number: {item.get('po_number')}
-                - Invoice Number: {item.get('invoice_number')}
-                - Exception Type: {exc_type}
-                - Grounding Evidence List: {json.dumps(evidence)}
-                - Policy Action: {policy} (Confidence: {int(conf*100)}%)
+Verified Grounding Facts (Extracted directly from transaction record):
+- Transaction ID: {item.get('id')}
+- Vendor: {vendor}
+- PO Number: {item.get('po_number')}
+- Invoice Number: {item.get('invoice_number')}
+- Exception Type: {exc_type}
+- Grounding Evidence List: {json.dumps(evidence)}
+- Policy Action: {policy} (Confidence: {int(conf*100)}%)
 
-                CRITICAL GROUNDING REQUIREMENT:
-                Your explanation MUST be strictly generated from the Evidence Facts provided above.
-                Cite the exact PO Amount (${exp_amt:,.2f}), Invoice Amount (${inv_amt:,.2f}), Difference (${diff:,.2f}), and Variance ({pct}%).
-                Do NOT invent unrecorded contract rules, unrecorded historical spending limits, or unrecorded prior transactions. State ONLY facts present in the provided transaction data.
+CRITICAL GROUNDING REQUIREMENT:
+Your explanation MUST be strictly generated from the Evidence Facts provided above.
+Cite the exact PO Amount (${exp_amt:,.2f}), Invoice Amount (${inv_amt:,.2f}), Difference (${diff:,.2f}), and Variance ({pct}%).
+Do NOT invent unrecorded contract rules, unrecorded historical spending limits, or unrecorded prior transactions.
+State ONLY facts present in the provided transaction data.
 
-                Return valid JSON matching this exact structure:
-                {{
-                    "root_cause": "Short summary derived strictly from grounded facts",
-                    "explanation": "Detailed plain-English breakdown citing exact amounts and line item discrepancies",
-                    "evidence": {json.dumps(evidence)},
-                    "suggested_action": "Recommended step to resolve"
-                }}
-                """
-                response = self.client.chat.completions.create(
-                    model="gpt-4o-mini",
-                    messages=[
-                        {"role": "system", "content": "You are a precise corporate accounting AI assistant. Always output JSON grounded strictly in source facts. Never invent unrecorded data."},
-                        {"role": "user", "content": prompt}
-                    ],
-                    response_format={"type": "json_object"},
-                    temperature=0.1
+Return valid JSON matching this exact structure:
+{{
+    "root_cause": "Short summary derived strictly from grounded facts",
+    "explanation": "Detailed plain-English breakdown citing exact amounts and line item discrepancies",
+    "evidence": {json.dumps(evidence)},
+    "suggested_action": "Recommended step to resolve"
+}}"""
+                response = self.client.models.generate_content(
+                    model="gemini-3.6-flash",
+                    contents=prompt,
+                    config={"response_mime_type": "application/json", "temperature": 0.1}
                 )
-                res_json = json.loads(response.choices[0].message.content)
+                res_json = json.loads(response.text)
                 return ExplainResponse(
                     exception_id=item.get("id"),
                     root_cause=res_json.get("root_cause", f"{exc_type} detected for {vendor}"),
@@ -81,7 +77,7 @@ class LLMService:
                     suggested_action=res_json.get("suggested_action", "")
                 )
             except Exception as e:
-                print(f"[LLMService] OpenAI call failed: {e}. Falling back to deterministic structured response.")
+                print(f"[LLMService] Gemini call failed: {e}. Falling back to deterministic structured response.")
 
         # High-quality deterministic fallback response grounded in item facts
         root_cause_map = {
