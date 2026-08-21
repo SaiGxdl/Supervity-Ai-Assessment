@@ -39,35 +39,36 @@ class LLMService:
                 You are an enterprise AP Exception Resolution Assistant.
                 Analyze this transaction exception and provide a clear, source-grounded explanation.
 
-                Transaction Data:
-                - ID: {item.get('id')}
+                Verified Grounding Facts (Extracted directly from transaction record):
+                - Transaction ID: {item.get('id')}
                 - Vendor: {vendor}
                 - PO Number: {item.get('po_number')}
                 - Invoice Number: {item.get('invoice_number')}
                 - Exception Type: {exc_type}
-                - Invoice Amount: ${inv_amt:,.2f}
-                - Expected Amount: ${exp_amt:,.2f}
-                - Variance: ${diff:,.2f} ({pct}%)
-                - Line Items: {json.dumps(item.get('line_items', []))}
-                - Confidence Score: {conf}
-                - Policy Action: {policy}
+                - Grounding Evidence List: {json.dumps(evidence)}
+                - Policy Action: {policy} (Confidence: {int(conf*100)}%)
+
+                CRITICAL GROUNDING REQUIREMENT:
+                Your explanation MUST be strictly generated from the Evidence Facts provided above.
+                Cite the exact PO Amount (${exp_amt:,.2f}), Invoice Amount (${inv_amt:,.2f}), Difference (${diff:,.2f}), and Variance ({pct}%).
+                Do NOT invent or hallucinate any ungrounded figures or terms.
 
                 Return valid JSON matching this exact structure:
                 {{
-                    "root_cause": "Short summary of why this exception occurred",
+                    "root_cause": "Short summary derived strictly from grounded facts",
                     "explanation": "Detailed plain-English breakdown citing exact amounts and line item discrepancies",
-                    "evidence": ["Bullet point fact 1", "Bullet point fact 2"],
+                    "evidence": {json.dumps(evidence)},
                     "suggested_action": "Recommended step to resolve"
                 }}
                 """
                 response = self.client.chat.completions.create(
                     model="gpt-4o-mini",
                     messages=[
-                        {"role": "system", "content": "You are a precise corporate accounting AI assistant. Always output JSON."},
+                        {"role": "system", "content": "You are a precise corporate accounting AI assistant. Always output JSON grounded strictly in source facts."},
                         {"role": "user", "content": prompt}
                     ],
                     response_format={"type": "json_object"},
-                    temperature=0.2
+                    temperature=0.1
                 )
                 res_json = json.loads(response.choices[0].message.content)
                 return ExplainResponse(
@@ -84,21 +85,22 @@ class LLMService:
 
         # High-quality deterministic fallback response grounded in item facts
         root_cause_map = {
-            "PRICE_MISMATCH": f"Unit price on Invoice {item.get('invoice_number')} (${inv_amt:,.2f}) exceeds Purchase Order {item.get('po_number')} rate (${exp_amt:,.2f}).",
-            "QUANTITY_MISMATCH": f"Invoiced line item quantity exceeds authorized quantity on PO {item.get('po_number')}.",
+            "PRICE_MISMATCH": f"Unit price on Invoice #{item.get('invoice_number')} (${inv_amt:,.2f}) exceeds Purchase Order #{item.get('po_number')} rate (${exp_amt:,.2f}).",
+            "QUANTITY_MISMATCH": f"Invoiced line item quantity exceeds authorized quantity on PO #{item.get('po_number')}.",
             "TAX_MISMATCH": f"Sales tax calculated on invoice differs from jurisdictional contract tax rate.",
-            "DUPLICATE_INVOICE": f"Invoice {item.get('invoice_number')} matches a previously processed payment transaction.",
+            "DUPLICATE_INVOICE": f"Invoice #{item.get('invoice_number')} matches a previously processed payment transaction.",
             "MISSING_PO_REFERENCE": f"Invoice submitted without an active purchase order reference number.",
             "UNUSUALLY_HIGH_AMOUNT": f"Invoice total (${inv_amt:,.2f}) exceeds vendor historic spending limit threshold."
         }
         root_cause = root_cause_map.get(exc_type, f"Discrepancy detected in invoice from {vendor}.")
 
+        diff_prefix = "+" if diff > 0 else ""
         explanation = (
             f"{item.get('id')} was flagged due to a {exc_type.replace('_', ' ').lower()}. "
-            f"The vendor {vendor} submitted invoice #{item.get('invoice_number')} totaling ${inv_amt:,.2f}, "
-            f"whereas expected amount on PO #{item.get('po_number')} was ${exp_amt:,.2f} "
-            f"(net variance of ${diff:,.2f} / {pct}%). "
-            f"AI Confidence is {int(conf * 100)}% based on rule determinism and line item matching."
+            f"Vendor {vendor} submitted invoice #{item.get('invoice_number')} totaling ${inv_amt:,.2f}, "
+            f"whereas expected PO total on #{item.get('po_number')} was ${exp_amt:,.2f} "
+            f"(Difference: {diff_prefix}${diff:,.2f} / Variance: {pct}%). "
+            f"Explanation is generated directly from source transaction evidence facts."
         )
 
         suggested_action_map = {

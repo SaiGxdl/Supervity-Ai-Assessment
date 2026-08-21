@@ -355,16 +355,29 @@ export default function ExceptionDetail({
             </div>
 
             {explanationData.evidence?.length > 0 && (
-              <div className="glass-card p-3.5 rounded-xl space-y-2">
-                <span className="text-[10px] font-bold text-emerald-400 uppercase tracking-wider">Grounded Evidence Facts</span>
-                <ul className="space-y-1">
-                  {explanationData.evidence.map((fact, i) => (
-                    <li key={i} className="text-xs text-slate-300 flex items-start gap-2">
-                      <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0 mt-0.5" />
-                      <span>{fact}</span>
-                    </li>
-                  ))}
-                </ul>
+              <div className="glass-card p-3.5 rounded-xl space-y-2.5 border border-emerald-500/30 bg-emerald-950/20">
+                <div className="flex items-center justify-between border-b border-emerald-500/20 pb-2">
+                  <span className="text-xs font-extrabold text-emerald-400 uppercase tracking-wider flex items-center gap-1.5 font-mono">
+                    <ShieldCheck className="w-4 h-4 text-emerald-400" />
+                    Source-Grounded Evidence Facts
+                  </span>
+                  <span className="text-[10px] font-mono font-bold bg-emerald-500/20 text-emerald-300 px-2 py-0.5 rounded border border-emerald-500/40">
+                    Verified Grounding
+                  </span>
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1 font-mono text-xs">
+                  {explanationData.evidence.map((fact, i) => {
+                    const hasColon = fact.includes(':');
+                    const label = hasColon ? fact.split(':')[0] : 'Fact';
+                    const val = hasColon ? fact.split(':').slice(1).join(':').trim() : fact;
+                    return (
+                      <div key={i} className="bg-slate-950/80 p-2.5 rounded-lg border border-slate-800 flex items-center justify-between">
+                        <span className="text-slate-400 font-sans text-[11px]">{label}:</span>
+                        <span className="font-bold text-emerald-400">{val}</span>
+                      </div>
+                    );
+                  })}
+                </div>
               </div>
             )}
           </div>

@@ -28,20 +28,23 @@ class ExceptionEngine:
         var_amt = item.get("variance_amount", 0)
         var_pct = item.get("variance_pct", 0)
 
+        evidence.append(f"PO Amount: ${expected_amt:,.2f}")
         evidence.append(f"Invoice Amount: ${invoice_amt:,.2f}")
-        evidence.append(f"Expected PO Amount: ${expected_amt:,.2f}")
-        evidence.append(f"Variance: ${var_amt:,.2f} ({'+' if var_amt > 0 else ''}{var_pct}%)")
+        diff_prefix = "+" if var_amt > 0 else ""
+        evidence.append(f"Difference: {diff_prefix}${var_amt:,.2f}")
+        pct_prefix = "+" if var_pct > 0 else ""
+        evidence.append(f"Variance: {pct_prefix}{var_pct}%")
 
         line_items = item.get("line_items", [])
         for line in line_items:
             if line.get("unit_price_inv") != line.get("unit_price_po"):
                 evidence.append(
-                    f"Item {line['item_id']} ({line['description']}): "
-                    f"Unit Price PO=${line['unit_price_po']:,.2f} vs Inv=${line['unit_price_inv']:,.2f}"
+                    f"Line {line['item_id']} ({line['description']}): "
+                    f"PO Rate ${line['unit_price_po']:,.2f} vs Inv Rate ${line['unit_price_inv']:,.2f}"
                 )
             if line.get("qty_inv") != line.get("qty_po"):
                 evidence.append(
-                    f"Item {line['item_id']} ({line['description']}): "
-                    f"Qty PO={line['qty_po']} vs Inv={line['qty_inv']}"
+                    f"Line {line['item_id']} ({line['description']}): "
+                    f"PO Qty {line['qty_po']} vs Inv Qty {line['qty_inv']}"
                 )
         return evidence
