@@ -87,10 +87,10 @@ class LLMService:
         root_cause_map = {
             "PRICE_MISMATCH": f"Unit price on Invoice #{item.get('invoice_number')} (${inv_amt:,.2f}) exceeds Purchase Order #{item.get('po_number')} rate (${exp_amt:,.2f}).",
             "QUANTITY_MISMATCH": f"Invoiced line item quantity exceeds authorized quantity on Purchase Order #{item.get('po_number')}.",
-            "TAX_MISMATCH": f"Tax amount on Invoice #{item.get('invoice_number')} differs from the expected tax calculation associated with PO #{item.get('po_number')}.",
-            "DUPLICATE_INVOICE": f"Invoice #{item.get('invoice_number')} was flagged as a potential duplicate under the duplicate-detection rule. Review matching reference before resolution.",
+            "TAX_MISMATCH": f"Recorded tax value on Invoice #{item.get('invoice_number')} differs from the expected tax value associated with this transaction.",
+            "DUPLICATE_INVOICE": f"Invoice #{item.get('invoice_number')} was flagged as a possible duplicate according to the configured duplicate-detection rule.",
             "MISSING_PO_REFERENCE": f"Invoice #{item.get('invoice_number')} was submitted without a valid Purchase Order (PO) reference number.",
-            "UNUSUALLY_HIGH_AMOUNT": f"Invoice #{item.get('invoice_number')} totaling ${inv_amt:,.2f} was classified as unusually high according to the configured exception rule for {vendor}."
+            "UNUSUALLY_HIGH_AMOUNT": f"Invoice #{item.get('invoice_number')} was flagged as unusually high according to the configured exception rule. Recorded invoice total: ${inv_amt:,.2f}."
         }
         root_cause = root_cause_map.get(exc_type, f"Discrepancy detected in invoice from {vendor}.")
 
