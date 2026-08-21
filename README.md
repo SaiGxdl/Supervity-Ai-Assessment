@@ -38,14 +38,14 @@ The architecture strictly separates **Deterministic Control** (Python business r
 ### Core Architecture Principles:
 - **LLM = Intelligence**: Generates structured, plain-English explanations citing line-item evidence and answers contextual questions.
 - **Python = Control**: Enforces variance tolerances, severity classification, and strict policy threshold guardrails ($\ge 90\%$ auto-resolution). The LLM does **NOT** decide auto-resolution eligibility.
-- **React = Experience**: High-end enterprise dark executive UX with line-item discrepancy tables, visual confidence gauges, real-time audit logs, and interactive analytics charts.
+- **React = Experience**: High-end enterprise dark executive UX with line-item discrepancy tables, visual confidence gauges, real-time UI state updates following reviewer actions, audit logs, and interactive analytics charts.
 - **JSON/SQLite = State**: Synthetic AP dataset with complete audit trail persistence and baseline state resets.
 
 ---
 
 ## ⚡ Key Features
 
-1. **Executive KPI Metrics Bar**: Real-time counter metrics tracking Total Exceptions, High Risk Items, Pending Queue, Auto-Resolved Items, and Resolution Rate $\%$.
+1. **Executive KPI Metrics Bar**: Dynamic counter metrics updated in real-time following reviewer actions (Total Exceptions, High Risk Items, Pending Queue, Auto-Resolved Items, and Resolution Rate $\%$).
 2. **Deterministic Exception & Policy Engine**:
    - Calculates exact dollar and percentage variances between POs and invoices.
    - Categorizes exceptions (`PRICE_MISMATCH`, `QUANTITY_MISMATCH`, `TAX_MISMATCH`, `DUPLICATE_INVOICE`, `MISSING_PO_REFERENCE`, `UNUSUALLY_HIGH_AMOUNT`).
@@ -57,7 +57,7 @@ The architecture strictly separates **Deterministic Control** (Python business r
 3. **Line-Item Discrepancy Inspector**: Detailed breakdown comparing PO unit rates and quantities against invoice rates with highlighted price/quantity mismatches.
 4. **Structured AI Employee Explanations**: Generates structured root cause analysis, grounded evidence facts, and recommended resolution steps.
 5. **Contextual AI Chatbot**: Interactive right sidebar allowing reviewers to ask context-grounded questions about the selected exception with quick prompt pills (`Why was this flagged?`, `Show evidence`, `Can this be auto-resolved?`).
-6. **Governance Audit Trail**: Real-time chronological audit event log recording every action with actor identification (`Ingestion Engine`, `Rules Engine`, `Policy Engine`, `AI Employee`, `Human Reviewer`).
+6. **Governance Audit Trail**: Chronological audit event log updated in real-time following reviewer actions with actor identification (`Ingestion Engine`, `Rules Engine`, `Policy Engine`, `AI Employee`, `Human Reviewer`).
 7. **Recharts Visual Analytics Modal**: Popup dashboard featuring category volume bar charts and resolution status donut charts.
 8. **1-Click Baseline Reset**: Allows evaluators to reset the dataset state back to the initial 10 synthetic baseline exceptions at any time.
 
@@ -119,7 +119,7 @@ npm run dev
 2. **Auto-Resolution Flow ($\ge 90\%$ Confidence)**:
    - Select `EX-1042` (Vendor: ABC Industrial Supplies, 94% Confidence, `AUTO_RESOLVE` policy).
    - Click **Explain Exception** $\rightarrow$ Show structured Root Cause and Grounded Evidence facts.
-   - Click **Auto-Resolve** $\rightarrow$ Show immediate status update to `AUTO RESOLVED` and real-time Audit Log update (`Policy Engine` actor).
+   - Click **Auto-Resolve** $\rightarrow$ Show immediate status update to `AUTO RESOLVED` and real-time UI state update in the Audit Log (`Policy Engine` actor).
 3. **Policy Guardrail Enforcement ($<90\%$ Confidence)**:
    - Select `EX-1043` (Vendor: Apex Logistics, 78% Confidence, `SUGGEST` policy).
    - Click **Auto-Resolve** $\rightarrow$ Show the **Policy Guardrail Enforcement Modal** popping up, explaining that auto-resolution is blocked because $78\% < 90\%$.
