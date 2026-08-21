@@ -33,8 +33,10 @@ venv/
 .venv/
 ENV/
 
-# IDE / OS
+# IDE / OS / Docs
 .DS_Store
 Thumbs.db
 .vscode/
 .idea/
+*.docx
+*.pdf
