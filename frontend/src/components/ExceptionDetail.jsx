@@ -54,11 +54,17 @@ export default function ExceptionDetail({
   const handleAutoResolveClick = async () => {
     if (!isAutoResolveEligible && exception.status === 'PENDING') {
       setPolicyErrorModal(
-        `Policy Violation Guardrail Blocked:\nException '${exception.id}' confidence is ${confidencePct}% (below the 90% auto-resolution policy threshold).\n\nCurrent Policy Action: ${exception.policy_action}.\nHuman reviewer sign-off is mandatory.`
+        `Auto-resolution blocked: Confidence ${confidencePct}% is below the required 90% threshold. Human reviewer sign-off is required.`
       );
       return;
     }
-    await onAutoResolve(exception.id);
+    try {
+      await onAutoResolve(exception.id);
+    } catch (err) {
+      setPolicyErrorModal(
+        `Auto-resolution blocked: Confidence ${confidencePct}% is below the required 90% threshold. Human reviewer sign-off is required.`
+      );
+    }
   };
 
   const handleHumanResolveSubmit = (e) => {
@@ -526,7 +532,7 @@ export default function ExceptionDetail({
       </div>
 
       {/* Policy Error Guardrail Modal */}
-      {policyErrorModal && (
+      {(policyErrorModal || (actionError && actionError.includes('Policy Violation'))) && (
         <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4">
           <div className="glass-panel max-w-md w-full p-6 rounded-2xl border border-rose-500/40 shadow-2xl space-y-4">
             <div className="flex items-center gap-3 text-rose-400">
@@ -534,21 +540,57 @@ export default function ExceptionDetail({
                 <ShieldAlert className="w-6 h-6" />
               </div>
               <div>
-                <h3 className="text-base font-bold text-white">Policy Guardrail Enforcement</h3>
-                <p className="text-xs text-rose-400 font-semibold">Auto-Resolution Blocked</p>
+                <h3 className="text-base font-bold text-white">Auto-resolution blocked</h3>
+                <p className="text-xs text-rose-400 font-semibold">Deterministic Policy Enforcement</p>
               </div>
             </div>
 
-            <p className="text-xs text-slate-300 whitespace-pre-line leading-relaxed bg-slate-900 p-3 rounded-xl border border-slate-800 font-mono">
-              {policyErrorModal}
-            </p>
+            <div className="bg-slate-900/90 p-4 rounded-xl border border-slate-800 space-y-2.5 font-mono text-xs">
+              <div className="flex justify-between items-center text-slate-300">
+                <span className="text-slate-400 font-sans">Exception ID:</span>
+                <span className="font-bold text-white">{exception.id}</span>
+              </div>
+              <div className="flex justify-between items-center text-amber-400">
+                <span className="text-slate-400 font-sans">Confidence:</span>
+                <span className="font-bold">{confidencePct}%</span>
+              </div>
+              <div className="flex justify-between items-center text-emerald-400">
+                <span className="text-slate-400 font-sans">Required threshold:</span>
+                <span className="font-bold">90%</span>
+              </div>
+              <div className="flex justify-between items-center text-indigo-300">
+                <span className="text-slate-400 font-sans">Policy Action:</span>
+                <span className="font-bold">{exception.policy_action}</span>
+              </div>
+              <div className="pt-2 border-t border-slate-800 text-[11px] text-slate-300 font-sans leading-relaxed">
+                Human approval is required for non-auto-resolvable exceptions below the 90% threshold.
+              </div>
+            </div>
 
-            <button
-              onClick={() => setPolicyErrorModal(null)}
-              className="w-full py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-white text-xs font-bold transition-all cursor-pointer"
-            >
-              Acknowledge Policy Rule
-            </button>
+            <div className="flex items-center gap-2 pt-1">
+              <button
+                type="button"
+                onClick={() => {
+                  setPolicyErrorModal(null);
+                  if (clearActionError) clearActionError();
+                }}
+                className="flex-1 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold transition-all cursor-pointer"
+              >
+                Close
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setPolicyErrorModal(null);
+                  if (clearActionError) clearActionError();
+                  setShowNotesModal(true);
+                }}
+                className="flex-1 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold transition-all shadow-lg shadow-indigo-600/30 flex items-center justify-center gap-1.5 cursor-pointer"
+              >
+                <CheckCircle2 className="w-4 h-4" />
+                <span>Approve & Resolve</span>
+              </button>
+            </div>
           </div>
         </div>
       )}
