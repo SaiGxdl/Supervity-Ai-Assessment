@@ -14,7 +14,8 @@ import {
   ListChecks, 
   DollarSign, 
   ShieldCheck, 
-  XCircle 
+  XCircle,
+  ChevronDown
 } from 'lucide-react';
 
 export default function ExceptionDetail({ 
@@ -32,6 +33,7 @@ export default function ExceptionDetail({
   const [showNotesModal, setShowNotesModal] = useState(false);
   const [resolutionNotes, setResolutionNotes] = useState('');
   const [policyErrorModal, setPolicyErrorModal] = useState(null);
+  const [showConfidenceBreakdown, setShowConfidenceBreakdown] = useState(false);
 
   if (!exception) {
     return (
@@ -222,6 +224,74 @@ export default function ExceptionDetail({
             <span className="bg-slate-950 px-2 py-0.5 rounded border border-slate-800 text-emerald-400">+5% Line-Item Evidence</span>
             <span className="bg-slate-950 px-2 py-0.5 rounded border border-slate-800 text-emerald-400">+5% Rule Predictability</span>
             <span className="bg-slate-950 px-2 py-0.5 rounded border border-slate-800 text-indigo-300">30% Vendor Factor</span>
+          </div>
+
+          {/* Expandable Detailed Breakdown Panel */}
+          <div className="pt-1 border-t border-slate-800/60">
+            <button
+              type="button"
+              onClick={() => setShowConfidenceBreakdown(!showConfidenceBreakdown)}
+              className="text-[10px] font-semibold text-indigo-400 hover:text-indigo-300 flex items-center gap-1 cursor-pointer font-mono"
+            >
+              <ChevronDown className={`w-3.5 h-3.5 transition-transform ${showConfidenceBreakdown ? 'rotate-180' : ''}`} />
+              <span>{showConfidenceBreakdown ? 'Hide Formula Calculation Breakdown' : 'View Formula Calculation Breakdown'}</span>
+            </button>
+
+            {showConfidenceBreakdown && (
+              <div className="mt-2 p-3 rounded-lg bg-slate-950/90 border border-slate-800 text-xs font-mono space-y-1.5 animate-fadeIn">
+                <div className="flex items-center justify-between text-[11px] border-b border-slate-800/80 pb-1 font-bold text-slate-300">
+                  <span>Rule Factor</span>
+                  <span>Value / Weight</span>
+                </div>
+                <div className="flex items-center justify-between text-[11px] text-slate-300">
+                  <span className="text-slate-400 font-sans">Base Deterministic Score:</span>
+                  <span className="text-slate-200">80%</span>
+                </div>
+                {exception.line_items?.length > 0 && (
+                  <div className="flex items-center justify-between text-[11px] text-emerald-400">
+                    <span className="text-slate-400 font-sans">Line-Item Evidence Available:</span>
+                    <span>+5%</span>
+                  </div>
+                )}
+                {['PRICE_MISMATCH', 'TAX_MISMATCH'].includes(exception.exception_type) ? (
+                  <div className="flex items-center justify-between text-[11px] text-emerald-400">
+                    <span className="text-slate-400 font-sans">Predictable Exception Pattern:</span>
+                    <span>+5%</span>
+                  </div>
+                ) : ['MISSING_PO_REFERENCE', 'UNUSUALLY_HIGH_AMOUNT'].includes(exception.exception_type) ? (
+                  <div className="flex items-center justify-between text-[11px] text-rose-400">
+                    <span className="text-slate-400 font-sans">Unpredictable Pattern Penalty:</span>
+                    <span>-20%</span>
+                  </div>
+                ) : null}
+                {Math.abs(exception.variance_pct) <= 5 ? (
+                  <div className="flex items-center justify-between text-[11px] text-emerald-400">
+                    <span className="text-slate-400 font-sans">Low Variance Adjustment (&le;5%):</span>
+                    <span>+10%</span>
+                  </div>
+                ) : Math.abs(exception.variance_pct) > 20 ? (
+                  <div className="flex items-center justify-between text-[11px] text-rose-400">
+                    <span className="text-slate-400 font-sans">High Variance Penalty (&gt;20%):</span>
+                    <span>-25%</span>
+                  </div>
+                ) : Math.abs(exception.variance_pct) > 10 ? (
+                  <div className="flex items-center justify-between text-[11px] text-amber-400">
+                    <span className="text-slate-400 font-sans">Moderate Variance Adjustment (&gt;10%):</span>
+                    <span>-15%</span>
+                  </div>
+                ) : null}
+                <div className="flex items-center justify-between text-[11px] text-indigo-300">
+                  <span className="text-slate-400 font-sans">Vendor History Reliability:</span>
+                  <span>30% Weighted Blend</span>
+                </div>
+                <div className="flex items-center justify-between text-xs pt-1.5 border-t border-slate-800 font-extrabold text-white">
+                  <span className="text-slate-200 uppercase font-sans">Final Calculated Score:</span>
+                  <span className={confidencePct >= 90 ? 'text-emerald-400' : confidencePct >= 70 ? 'text-amber-400' : 'text-rose-400'}>
+                    {confidencePct}%
+                  </span>
+                </div>
+              </div>
+            )}
           </div>
         </div>
 
