@@ -29,13 +29,16 @@ class ConfidencePolicyEngine:
         """
         Calculates a deterministic, explainable confidence score [0.0 - 1.0].
         
-        Formula:
-        Confidence = Base (80%) + Line-Item Match (+5%) + Rule Predictability (+5%) 
-                     + PO Reference (+5%) +/- Variance Factor +/- Vendor History Weight (30%)
+        Formula Factors:
+        1. Base Confidence: 80%
+        2. Line-Item Evidence Availability: +5% (if line items present)
+        3. Exception Rule Predictability: +5% for PRICE/TAX, -20% for MISSING_PO/UNUSUALLY_HIGH
+        4. Variance Severity Factor: +10% (<=5%), -15% (>10%), -25% (>20%)
+        5. Vendor History Reliability: 30% weight blend
         """
         base_confidence = 0.80
 
-        # 1. Line-item matching bonus
+        # 1. Line-item evidence availability bonus
         if has_line_items:
             base_confidence += 0.05
 
@@ -69,9 +72,9 @@ class ConfidencePolicyEngine:
         var_pct = abs(item.get("variance_pct", 0))
         line_items = item.get("line_items", [])
 
-        factors.append("Base Deterministic Rule Score: 80%")
+        factors.append("Base Rule Score: 80%")
         if line_items:
-            factors.append("Line-Item Qty Match: +5%")
+            factors.append("Line-Item Evidence Available: +5%")
         if exc_type in ["PRICE_MISMATCH", "TAX_MISMATCH"]:
             factors.append(f"Predictable Rule Pattern ({exc_type}): +5%")
         elif exc_type in ["MISSING_PO_REFERENCE", "UNUSUALLY_HIGH_AMOUNT"]:

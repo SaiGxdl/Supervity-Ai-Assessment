@@ -219,9 +219,8 @@ export default function ExceptionDetail({
           <div className="pt-1 flex flex-wrap items-center gap-1.5 text-[10px] font-mono text-slate-400">
             <span className="text-slate-500 font-semibold uppercase tracking-wider text-[9px]">Calculated via Rules:</span>
             <span className="bg-slate-950 px-2 py-0.5 rounded border border-slate-800 text-slate-300">Base 80%</span>
-            <span className="bg-slate-950 px-2 py-0.5 rounded border border-slate-800 text-emerald-400">+5% Line Match</span>
+            <span className="bg-slate-950 px-2 py-0.5 rounded border border-slate-800 text-emerald-400">+5% Line-Item Evidence</span>
             <span className="bg-slate-950 px-2 py-0.5 rounded border border-slate-800 text-emerald-400">+5% Rule Predictability</span>
-            <span className="bg-slate-950 px-2 py-0.5 rounded border border-slate-800 text-emerald-400">+5% Valid PO</span>
             <span className="bg-slate-950 px-2 py-0.5 rounded border border-slate-800 text-indigo-300">30% Vendor Factor</span>
           </div>
         </div>

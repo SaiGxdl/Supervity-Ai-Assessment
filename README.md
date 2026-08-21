@@ -58,9 +58,9 @@ Key capabilities:
 - **LLM = Intelligence**: Generates structured, plain-English root cause explanations citing line-item evidence and handles contextual Q&A chat.
 
 ### B. Deterministic Confidence Score Formula
-Confidence is calculated deterministically via Python rules:
-$$\text{Confidence} = \text{Base (80\%)} + \text{Line-Item Match (+5\%)} + \text{Rule Predictability (+5\%)} + \text{Valid PO (+5\%)} \pm \text{Variance Factor} \pm \text{Vendor History (30\% weight)}$$
-*Example (`EX-1042`): Base 80% + Line-Item Match 5% + Price Mismatch Predictability 5% + Valid PO 5% - Variance 1% = **94% Confidence** ($\ge 90\%$ Auto-Resolve).*
+Confidence is calculated deterministically via Python business rules:
+$$\text{Confidence} = \text{Base (80\%)} + \text{Line-Item Evidence (+5\%)} + \text{Rule Predictability (+5\%)} \pm \text{Variance Factor} \pm \text{Vendor History (30\% weight)}$$
+*Example (`EX-1042`): Base 80% + Line-Item Evidence 5% + Price Mismatch Predictability 5% + Vendor History blend = **94% Confidence** ($\ge 90\%$ Auto-Resolve).*
 
 ---
 
