@@ -1,0 +1,132 @@
+# Real-Time Exception Resolution Workbench
+> **Supervity FDE Assessment — Problem Statement 9: AI Employee for Exception Resolution**
+
+An enterprise-grade, human-in-the-loop **Exception Resolution Workbench** designed for Accounts Payable (AP) invoice & purchase order (PO) exception processing. 
+
+The architecture strictly separates **Deterministic Control** (Python business rules and confidence threshold policy enforcement) from **AI Employee Intelligence** (LLM explanations, evidence extraction, and contextual chat), presented through a **React + Vite executive dashboard**.
+
+---
+
+## 🏛️ System Architecture & Philosophy
+
+```
+ ┌────────────────────────────────────────────────────────┐
+ │                      React UI                          │
+ │      Executive Dashboard + Contextual AI Chatbot        │
+ └──────────────────────────┬─────────────────────────────┘
+                            │ REST API (FastAPI)
+ ┌──────────────────────────▼─────────────────────────────┐
+ │                    FastAPI Backend                     │
+ └──────┬───────────────────┬───────────────────┬─────────┘
+        │                   │                   │
+        ▼                   ▼                   ▼
+ ┌──────────────┐   ┌───────────────┐   ┌──────────────┐
+ │ Exception    │   │ Confidence    │   │ Data Store   │
+ │ Engine       │   │ Policy Engine │   │ (JSON state) │
+ │ (Python)     │   │ (Python)      │   └──────────────┘
+ └──────┬───────┘   └───────┬───────┘
+        │                   │
+        └─────────┬─────────┘
+                  ▼
+          ┌───────────────┐
+          │ OpenAI / LLM  │
+          │ Explanation & │
+          │ Recommendation│
+          └───────────────┘
+```
+
+### Core Architecture Principles:
+- **LLM = Intelligence**: Generates structured, plain-English explanations citing line-item evidence and answers contextual questions.
+- **Python = Control**: Enforces variance tolerances, severity classification, and strict policy threshold guardrails ($\ge 90\%$ auto-resolution). The LLM does **NOT** decide auto-resolution eligibility.
+- **React = Experience**: High-end enterprise dark executive UX with line-item discrepancy tables, visual confidence gauges, real-time audit logs, and interactive analytics charts.
+- **JSON/SQLite = State**: Synthetic AP dataset with complete audit trail persistence and baseline state resets.
+
+---
+
+## ⚡ Key Features
+
+1. **Executive KPI Metrics Bar**: Real-time counter metrics tracking Total Exceptions, High Risk Items, Pending Queue, Auto-Resolved Items, and Resolution Rate $\%$.
+2. **Deterministic Exception & Policy Engine**:
+   - Calculates exact dollar and percentage variances between POs and invoices.
+   - Categorizes exceptions (`PRICE_MISMATCH`, `QUANTITY_MISMATCH`, `TAX_MISMATCH`, `DUPLICATE_INVOICE`, `MISSING_PO_REFERENCE`, `UNUSUALLY_HIGH_AMOUNT`).
+   - Evaluates a deterministic Confidence Score ($0-100\%$) based on variance severity, rule predictability, line-item matching, and vendor history.
+   - **Enforces Policy Thresholds**:
+     - $\ge 90\%$ Confidence $\rightarrow$ `AUTO_RESOLVE` eligible (1-click auto-resolution).
+     - $70\% - 89\%$ Confidence $\rightarrow$ `SUGGEST` (Requires 1-click human reviewer approval).
+     - $< 70\%$ Confidence $\rightarrow$ `HUMAN_REVIEW` (Auto-resolution is strictly blocked with policy guardrail error feedback).
+3. **Line-Item Discrepancy Inspector**: Detailed breakdown comparing PO unit rates and quantities against invoice rates with highlighted price/quantity mismatches.
+4. **Structured AI Employee Explanations**: Generates structured root cause analysis, grounded evidence facts, and recommended resolution steps.
+5. **Contextual AI Chatbot**: Interactive right sidebar allowing reviewers to ask context-grounded questions about the selected exception with quick prompt pills (`Why was this flagged?`, `Show evidence`, `Can this be auto-resolved?`).
+6. **Governance Audit Trail**: Real-time chronological audit event log recording every action with actor identification (`Ingestion Engine`, `Rules Engine`, `Policy Engine`, `AI Employee`, `Human Reviewer`).
+7. **Recharts Visual Analytics Modal**: Popup dashboard featuring category volume bar charts and resolution status donut charts.
+8. **1-Click Baseline Reset**: Allows evaluators to reset the dataset state back to the initial 10 synthetic baseline exceptions at any time.
+
+---
+
+## 🚀 Quick Start Guide
+
+### Prerequisites
+- **Python**: 3.10 or higher
+- **Node.js**: v18.0 or higher (with npm)
+
+### 1. Launch FastAPI Backend
+```bash
+# Navigate to backend directory
+cd backend
+
+# Install dependencies (if not already installed)
+pip install -r requirements.txt
+
+# Run FastAPI server
+python run.py
+```
+*Backend runs at `http://127.0.0.1:8000` (Interactive API docs at `http://127.0.0.1:8000/docs`).*
+
+### 2. Launch React Frontend
+```bash
+# In a new terminal, navigate to frontend directory
+cd frontend
+
+# Install dependencies
+npm install
+
+# Start Vite dev server
+npm run dev
+```
+*Frontend runs at `http://127.0.0.1:5173/`.*
+
+---
+
+## 📊 REST API Reference
+
+| Method | Endpoint | Description |
+| :--- | :--- | :--- |
+| `GET` | `/api/exceptions` | Retrieve all exceptions (supports optional `status` & `severity` query filters) |
+| `GET` | `/api/exceptions/{id}` | Retrieve detailed exception record by ID |
+| `POST` | `/api/exceptions/{id}/explain` | Generate AI explanation with root cause & grounded evidence |
+| `POST` | `/api/exceptions/{id}/suggest-resolution` | Generate AI resolution recommendation & risk level |
+| `POST` | `/api/exceptions/{id}/chat` | Contextual Q&A chat endpoint for selected exception |
+| `POST` | `/api/exceptions/{id}/auto-resolve` | Execute auto-resolution (Enforces $\ge 90\%$ policy threshold guardrail; returns 400 error if $<90\%$) |
+| `POST` | `/api/exceptions/{id}/resolve` | Execute human manual sign-off resolution with audit notes |
+| `GET` | `/api/metrics` | Retrieve overall KPI metrics and category breakdown |
+| `POST` | `/api/reset` | Reset dataset back to initial 10 synthetic exceptions baseline |
+
+---
+
+## 📽️ 5-Minute Demo Walkthrough Script for Assessment
+
+1. **Dashboard Overview**: Point out the top KPI metric cards (Total: 10, High Risk, Pending, Auto-Resolved, Resolution Rate).
+2. **Auto-Resolution Flow ($\ge 90\%$ Confidence)**:
+   - Select `EX-1042` (Vendor: ABC Industrial Supplies, 94% Confidence, `AUTO_RESOLVE` policy).
+   - Click **Explain Exception** $\rightarrow$ Show structured Root Cause and Grounded Evidence facts.
+   - Click **Auto-Resolve** $\rightarrow$ Show immediate status update to `AUTO RESOLVED` and real-time Audit Log update (`Policy Engine` actor).
+3. **Policy Guardrail Enforcement ($<90\%$ Confidence)**:
+   - Select `EX-1043` (Vendor: Apex Logistics, 78% Confidence, `SUGGEST` policy).
+   - Click **Auto-Resolve** $\rightarrow$ Show the **Policy Guardrail Enforcement Modal** popping up, explaining that auto-resolution is blocked because $78\% < 90\%$.
+   - Click **Approve & Resolve** $\rightarrow$ Enter human reviewer sign-off notes and submit. Show status update to `RESOLVED`.
+4. **Contextual AI Chatbot**:
+   - Select an exception and click quick prompt pills in the right sidebar (`Why was this flagged?`, `Show evidence`, `Can this be auto-resolved?`). Show contextual response.
+5. **Analytics Charts**:
+   - Click **Analytics** in the header $\rightarrow$ Show Recharts category volume bar chart and status distribution donut chart.
+6. **Reset Baseline**:
+   - Click **Reset Demo State** in the header $\rightarrow$ Show dataset resetting to baseline state.

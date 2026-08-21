@@ -1,0 +1,356 @@
+[
+  {
+    "id": "EX-1042",
+    "vendor": "ABC Industrial Supplies",
+    "po_number": "PO-8841",
+    "invoice_number": "INV-2026-094",
+    "invoice_amount": 8450.0,
+    "expected_amount": 7900.0,
+    "variance_amount": 550.0,
+    "variance_pct": 6.96,
+    "exception_type": "PRICE_MISMATCH",
+    "severity": "HIGH",
+    "confidence_score": 0.94,
+    "policy_action": "AUTO_RESOLVE",
+    "status": "PENDING",
+    "created_at": "2026-08-21T14:32:08Z",
+    "line_items": [
+      {
+        "item_id": "SKU-992",
+        "description": "Heavy Duty Control Valves",
+        "qty_po": 10,
+        "qty_inv": 10,
+        "unit_price_po": 790.0,
+        "unit_price_inv": 845.0,
+        "total_po": 7900.0,
+        "total_inv": 8450.0
+      }
+    ],
+    "audit_trail": [
+      {
+        "timestamp": "2026-08-21T14:32:08Z",
+        "event": "Exception EX-1042 ingested into workbench queue",
+        "actor": "Ingestion Engine"
+      },
+      {
+        "timestamp": "2026-08-21T14:32:11Z",
+        "event": "Deterministic Engine classified PRICE_MISMATCH (+6.96% variance)",
+        "actor": "Rules Engine"
+      },
+      {
+        "timestamp": "2026-08-21T14:32:14Z",
+        "event": "Confidence Score evaluated at 94% (\u226590% Auto-Resolve threshold)",
+        "actor": "Policy Engine"
+      },
+      {
+        "timestamp": "2026-08-21T15:47:14Z",
+        "event": "AI Explanation generated and requested by reviewer",
+        "actor": "AI Employee"
+      },
+      {
+        "timestamp": "2026-08-21T15:47:14Z",
+        "event": "AI Resolution recommendation generated",
+        "actor": "AI Employee"
+      },
+      {
+        "timestamp": "2026-08-21T15:47:14Z",
+        "event": "Reviewer chat query: 'Why was this flagged?...'",
+        "actor": "Human Reviewer"
+      }
+    ]
+  },
+  {
+    "id": "EX-1043",
+    "vendor": "Apex Logistics",
+    "po_number": "PO-8842",
+    "invoice_number": "INV-AP-4011",
+    "invoice_amount": 14200.0,
+    "expected_amount": 12000.0,
+    "variance_amount": 2200.0,
+    "variance_pct": 18.33,
+    "exception_type": "QUANTITY_MISMATCH",
+    "severity": "HIGH",
+    "confidence_score": 0.78,
+    "policy_action": "SUGGEST",
+    "status": "PENDING",
+    "created_at": "2026-08-21T14:35:12Z",
+    "line_items": [
+      {
+        "item_id": "LOG-301",
+        "description": "Freight Shipping Pallets",
+        "qty_po": 100,
+        "qty_inv": 118,
+        "unit_price_po": 120.0,
+        "unit_price_inv": 120.0,
+        "total_po": 12000.0,
+        "total_inv": 14160.0
+      }
+    ],
+    "audit_trail": [
+      {
+        "timestamp": "2026-08-21T14:35:12Z",
+        "event": "Exception EX-1043 ingested into workbench queue",
+        "actor": "Ingestion Engine"
+      },
+      {
+        "timestamp": "2026-08-21T14:35:15Z",
+        "event": "Deterministic Engine flagged QUANTITY_MISMATCH (118 inv vs 100 PO)",
+        "actor": "Rules Engine"
+      },
+      {
+        "timestamp": "2026-08-21T14:35:18Z",
+        "event": "Confidence Score evaluated at 78% (70-89% Suggestion threshold)",
+        "actor": "Policy Engine"
+      }
+    ]
+  },
+  {
+    "id": "EX-1044",
+    "vendor": "NexusTech Solutions",
+    "po_number": "PO-8843",
+    "invoice_number": "INV-NX-8821",
+    "invoice_amount": 4500.0,
+    "expected_amount": 4500.0,
+    "variance_amount": 0.0,
+    "variance_pct": 0.0,
+    "exception_type": "DUPLICATE_INVOICE",
+    "severity": "HIGH",
+    "confidence_score": 0.92,
+    "policy_action": "AUTO_RESOLVE",
+    "status": "PENDING",
+    "created_at": "2026-08-21T14:40:00Z",
+    "line_items": [
+      {
+        "item_id": "SW-101",
+        "description": "Enterprise SaaS License Renewal",
+        "qty_po": 1,
+        "qty_inv": 1,
+        "unit_price_po": 4500.0,
+        "unit_price_inv": 4500.0,
+        "total_po": 4500.0,
+        "total_inv": 4500.0
+      }
+    ],
+    "audit_trail": [
+      {
+        "timestamp": "2026-08-21T14:40:00Z",
+        "event": "Exception EX-1044 ingested into workbench queue",
+        "actor": "Ingestion Engine"
+      },
+      {
+        "timestamp": "2026-08-21T14:40:04Z",
+        "event": "Deterministic Engine detected DUPLICATE_INVOICE submission",
+        "actor": "Rules Engine"
+      }
+    ]
+  },
+  {
+    "id": "EX-1045",
+    "vendor": "Global Office Supplies",
+    "po_number": "PO-8844",
+    "invoice_number": "INV-GOS-551",
+    "invoice_amount": 1250.0,
+    "expected_amount": 1200.0,
+    "variance_amount": 50.0,
+    "variance_pct": 4.17,
+    "exception_type": "PRICE_MISMATCH",
+    "severity": "LOW",
+    "confidence_score": 0.96,
+    "policy_action": "AUTO_RESOLVE",
+    "status": "PENDING",
+    "created_at": "2026-08-21T14:45:22Z",
+    "line_items": [
+      {
+        "item_id": "OFF-12",
+        "description": "Ergonomic Chairs Pack",
+        "qty_po": 4,
+        "qty_inv": 4,
+        "unit_price_po": 300.0,
+        "unit_price_inv": 312.5,
+        "total_po": 1200.0,
+        "total_inv": 1250.0
+      }
+    ],
+    "audit_trail": [
+      {
+        "timestamp": "2026-08-21T14:45:22Z",
+        "event": "Exception EX-1045 ingested into workbench queue",
+        "actor": "Ingestion Engine"
+      }
+    ]
+  },
+  {
+    "id": "EX-1046",
+    "vendor": "Precision Machining",
+    "po_number": "UNASSIGNED",
+    "invoice_number": "INV-PM-909",
+    "invoice_amount": 28900.0,
+    "expected_amount": 0.0,
+    "variance_amount": 28900.0,
+    "variance_pct": 100.0,
+    "exception_type": "MISSING_PO_REFERENCE",
+    "severity": "HIGH",
+    "confidence_score": 0.62,
+    "policy_action": "HUMAN_REVIEW",
+    "status": "PENDING",
+    "created_at": "2026-08-21T14:50:11Z",
+    "line_items": [],
+    "audit_trail": [
+      {
+        "timestamp": "2026-08-21T14:50:11Z",
+        "event": "Exception EX-1046 ingested - Missing PO Reference",
+        "actor": "Ingestion Engine"
+      },
+      {
+        "timestamp": "2026-08-21T14:50:14Z",
+        "event": "Confidence Score 62% (<70% Manual Audit Policy)",
+        "actor": "Policy Engine"
+      }
+    ]
+  },
+  {
+    "id": "EX-1047",
+    "vendor": "OmniCloud Hosting",
+    "po_number": "PO-8846",
+    "invoice_number": "INV-OC-7731",
+    "invoice_amount": 9800.0,
+    "expected_amount": 8900.0,
+    "variance_amount": 900.0,
+    "variance_pct": 10.11,
+    "exception_type": "TAX_MISMATCH",
+    "severity": "MEDIUM",
+    "confidence_score": 0.88,
+    "policy_action": "SUGGEST",
+    "status": "PENDING",
+    "created_at": "2026-08-21T14:55:03Z",
+    "line_items": [
+      {
+        "item_id": "CLOUD-01",
+        "description": "GPU Cloud Compute Cluster",
+        "qty_po": 1,
+        "qty_inv": 1,
+        "unit_price_po": 8900.0,
+        "unit_price_inv": 8900.0,
+        "total_po": 8900.0,
+        "total_inv": 8900.0
+      }
+    ],
+    "audit_trail": [
+      {
+        "timestamp": "2026-08-21T14:55:03Z",
+        "event": "Exception EX-1047 ingested into queue",
+        "actor": "Ingestion Engine"
+      }
+    ]
+  },
+  {
+    "id": "EX-1048",
+    "vendor": "Titanium Steel Components",
+    "po_number": "PO-8847",
+    "invoice_number": "INV-TSC-1002",
+    "invoice_amount": 45000.0,
+    "expected_amount": 32000.0,
+    "variance_amount": 13000.0,
+    "variance_pct": 40.63,
+    "exception_type": "UNUSUALLY_HIGH_AMOUNT",
+    "severity": "HIGH",
+    "confidence_score": 0.55,
+    "policy_action": "HUMAN_REVIEW",
+    "status": "PENDING",
+    "created_at": "2026-08-21T15:00:44Z",
+    "line_items": [],
+    "audit_trail": [
+      {
+        "timestamp": "2026-08-21T15:00:44Z",
+        "event": "Exception EX-1048 ingested - Outlier Amount Detected",
+        "actor": "Ingestion Engine"
+      }
+    ]
+  },
+  {
+    "id": "EX-1049",
+    "vendor": "Vanguard Security Services",
+    "po_number": "PO-8848",
+    "invoice_number": "INV-VSS-991",
+    "invoice_amount": 3400.0,
+    "expected_amount": 3200.0,
+    "variance_amount": 200.0,
+    "variance_pct": 6.25,
+    "exception_type": "PRICE_MISMATCH",
+    "severity": "LOW",
+    "confidence_score": 0.91,
+    "policy_action": "AUTO_RESOLVE",
+    "status": "AUTO_RESOLVED",
+    "created_at": "2026-08-21T15:05:10Z",
+    "line_items": [],
+    "audit_trail": [
+      {
+        "timestamp": "2026-08-21T15:05:10Z",
+        "event": "Exception EX-1049 ingested into workbench queue",
+        "actor": "Ingestion Engine"
+      },
+      {
+        "timestamp": "2026-08-21T15:06:00Z",
+        "event": "Auto-Resolution executed automatically via policy rule",
+        "actor": "AutoResolve Policy Engine"
+      }
+    ],
+    "resolution_notes": "Auto-resolved: minor variance within corporate threshold.",
+    "resolved_at": "2026-08-21T15:06:00Z"
+  },
+  {
+    "id": "EX-1050",
+    "vendor": "BlueSky Freight Corp",
+    "po_number": "PO-8849",
+    "invoice_number": "INV-BSF-334",
+    "invoice_amount": 6700.0,
+    "expected_amount": 6100.0,
+    "variance_amount": 600.0,
+    "variance_pct": 9.84,
+    "exception_type": "PRICE_MISMATCH",
+    "severity": "MEDIUM",
+    "confidence_score": 0.82,
+    "policy_action": "SUGGEST",
+    "status": "RESOLVED",
+    "created_at": "2026-08-21T15:10:00Z",
+    "line_items": [],
+    "audit_trail": [
+      {
+        "timestamp": "2026-08-21T15:10:00Z",
+        "event": "Exception EX-1050 ingested into workbench queue",
+        "actor": "Ingestion Engine"
+      },
+      {
+        "timestamp": "2026-08-21T15:12:30Z",
+        "event": "Manually resolved by reviewer: Approved vendor price variance",
+        "actor": "Human Reviewer"
+      }
+    ],
+    "resolution_notes": "Reviewed and approved after vendor confirmed surcharge.",
+    "resolved_at": "2026-08-21T15:12:30Z"
+  },
+  {
+    "id": "EX-1051",
+    "vendor": "Vertex Electronics",
+    "po_number": "PO-8850",
+    "invoice_number": "INV-VE-9901",
+    "invoice_amount": 18400.0,
+    "expected_amount": 18400.0,
+    "variance_amount": 0.0,
+    "variance_pct": 0.0,
+    "exception_type": "DUPLICATE_INVOICE",
+    "severity": "HIGH",
+    "confidence_score": 0.87,
+    "policy_action": "SUGGEST",
+    "status": "PENDING",
+    "created_at": "2026-08-21T15:15:00Z",
+    "line_items": [],
+    "audit_trail": [
+      {
+        "timestamp": "2026-08-21T15:15:00Z",
+        "event": "Exception EX-1051 ingested - Potential Duplicate Invoice",
+        "actor": "Ingestion Engine"
+      }
+    ]
+  }
+]
