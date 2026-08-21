@@ -23,8 +23,7 @@ class ConfidencePolicyEngine:
         exception_type: ExceptionType,
         variance_pct: float,
         has_line_items: bool,
-        vendor_history_score: float = 0.95,
-        has_exact_match_rules: bool = True
+        vendor_history_score: float = 0.95
     ) -> float:
         """
         Calculates a deterministic, explainable confidence score [0.0 - 1.0].

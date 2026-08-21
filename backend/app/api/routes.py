@@ -146,6 +146,11 @@ def auto_resolve_exception(item_id: str):
 
     # DETERMINISTIC GUARDRAIL CHECK
     if conf < ConfidencePolicyEngine.AUTO_RESOLVE_THRESHOLD or policy != PolicyAction.AUTO_RESOLVE:
+        blocked_msg = (
+            f"AUTO_RESOLVE_ATTEMPT Blocked: confidence {int(conf*100)}% < threshold 90% "
+            f"(Policy action: {policy}). Human reviewer sign-off mandatory."
+        )
+        data_store.append_audit_log(item_id, blocked_msg, actor="Policy Engine")
         raise HTTPException(
             status_code=400,
             detail=(

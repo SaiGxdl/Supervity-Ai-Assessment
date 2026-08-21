@@ -94,6 +94,12 @@ npm run dev
 ```
 *Frontend runs at `http://127.0.0.1:5173/`.*
 
+### 3. Run Policy Engine Test Suite
+```bash
+python backend/tests/test_policy_engine.py
+```
+*Executes 6 unit tests verifying policy rules, threshold enforcement, auto-resolve blocking, variance math, and audit trail logging (6 passed in 0.2s).*
+
 ---
 
 ## 📽️ 7. Demo Flow
@@ -105,7 +111,7 @@ npm run dev
    - Click **Auto-Resolve** $\rightarrow$ Status updates immediately to `AUTO RESOLVED` with audit log entry.
 3. **Policy Guardrail Enforcement ($<90\%$ Confidence)**:
    - Select `EX-1043` (Vendor: Apex Logistics, 78% Confidence).
-   - Click **Auto-Resolve** $\rightarrow$ Policy Enforcement Modal blocks action ($78\% < 90\%$).
+   - Click **Auto-Resolve** $\rightarrow$ Policy Enforcement Modal blocks action ($78\% < 90\%$) and logs `AUTO_RESOLVE_ATTEMPT Blocked` audit event.
    - Click **Approve & Resolve** $\rightarrow$ Enter reviewer sign-off notes to resolve manually.
 4. **Contextual AI Chatbot**:
    - Ask `Why was this flagged?`, `Show evidence`, or `Can this be auto-resolved?`.
@@ -127,3 +133,4 @@ npm run dev
 1. **Request-Driven State Updates**: Uses REST API request-driven UI updates following reviewer actions rather than complex WebSocket streaming infrastructure.
 2. **JSON Data Store**: The current prototype uses JSON-based persistence for simplicity and reproducibility, with a straightforward path to SQLite or another persistent datastore for production use.
 3. **Single-Tenant Prototype**: Focuses on core exception governance, decision rules, and AI interaction over full multi-tenant auth/RBAC infrastructure.
+4. **Deterministic Policy Control vs. Autonomous LLM Execution**: We chose deterministic Python policy threshold enforcement over allowing the LLM to authorize auto-resolutions. This eliminates hallucinated status transitions while leveraging the LLM for explanations, evidence extraction, and recommendation intelligence.
