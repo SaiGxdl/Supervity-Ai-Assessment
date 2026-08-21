@@ -5,6 +5,7 @@ from typing import List, Dict, Any, Optional
 from app.models.schemas import ExceptionStatus, PolicyAction
 
 DATA_FILE = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), "data", "exceptions.json")
+SEED_FILE = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), "data", "exceptions_seed.json")
 
 class DataStore:
     def __init__(self):
@@ -113,8 +114,10 @@ class DataStore:
         }
 
     def reset_data(self):
-        if self._initial_backup:
-            self._data = json.loads(json.dumps(self._initial_backup))
-            self.save_data()
+        """Reset to the clean baseline seed — always restores all items to PENDING."""
+        seed_file = SEED_FILE if os.path.exists(SEED_FILE) else DATA_FILE
+        with open(seed_file, "r", encoding="utf-8") as f:
+            self._data = json.load(f)
+        self.save_data()
 
 data_store = DataStore()
