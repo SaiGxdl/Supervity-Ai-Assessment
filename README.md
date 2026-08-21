@@ -99,7 +99,7 @@ npm run dev
 ```bash
 python backend/tests/test_policy_engine.py
 ```
-*Executes 6 unit tests verifying policy rules, threshold enforcement, auto-resolve blocking, variance math, and audit trail logging (6 passed in 0.2s).*
+*Executes 7 unit tests verifying policy threshold boundaries (90%, 89%, 70%, 69%), auto-resolve guardrail blocking, variance math, and rule detection (7 passed in 0.1s).*
 
 ---
 
