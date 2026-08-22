@@ -12,7 +12,7 @@
     "severity": "HIGH",
     "confidence_score": 0.94,
     "policy_action": "AUTO_RESOLVE",
-    "status": "AUTO_RESOLVED",
+    "status": "PENDING",
     "created_at": "2026-08-21T14:32:08Z",
     "line_items": [
       {
@@ -31,34 +31,9 @@
         "timestamp": "2026-08-21T14:32:08Z",
         "event": "Exception EX-1042 ingested into workbench queue",
         "actor": "Ingestion Engine"
-      },
-      {
-        "timestamp": "2026-08-21T19:22:14Z",
-        "event": "AI Explanation generated and requested by reviewer",
-        "actor": "AI Employee"
-      },
-      {
-        "timestamp": "2026-08-21T19:22:14Z",
-        "event": "AI Resolution recommendation generated",
-        "actor": "AI Employee"
-      },
-      {
-        "timestamp": "2026-08-21T19:22:14Z",
-        "event": "Status updated to 'ExceptionStatus.AUTO_RESOLVED' (Auto-resolved via Policy Threshold Rule (Confidence: 94% \u2265 90%).)",
-        "actor": "Policy Engine"
-      },
-      {
-        "timestamp": "2026-08-21T19:22:14Z",
-        "event": "Reviewer chat query: 'Why was this flagged?...'",
-        "actor": "Human Reviewer"
-      },
-      {
-        "timestamp": "2026-08-21T19:26:04Z",
-        "event": "AI Explanation generated and requested by reviewer",
-        "actor": "AI Employee"
       }
     ],
-    "resolved_at": "2026-08-21T19:22:14Z",
+    "resolved_at": "2026-08-21T19:09:26Z",
     "resolution_notes": "Auto-resolved via Policy Threshold Rule (Confidence: 94% \u2265 90%)."
   },
   {
@@ -74,7 +49,7 @@
     "severity": "HIGH",
     "confidence_score": 0.78,
     "policy_action": "SUGGEST",
-    "status": "RESOLVED",
+    "status": "PENDING",
     "created_at": "2026-08-21T14:35:12Z",
     "line_items": [
       {
@@ -93,25 +68,10 @@
         "timestamp": "2026-08-21T14:35:12Z",
         "event": "Exception EX-1043 ingested into workbench queue",
         "actor": "Ingestion Engine"
-      },
-      {
-        "timestamp": "2026-08-21T19:22:14Z",
-        "event": "AUTO_RESOLVE_ATTEMPT Blocked: confidence 78% < threshold 90% (Policy action: SUGGEST). Human reviewer sign-off mandatory.",
-        "actor": "Policy Engine"
-      },
-      {
-        "timestamp": "2026-08-21T19:22:14Z",
-        "event": "Status updated to 'ExceptionStatus.RESOLVED' (Manually verified)",
-        "actor": "Human Reviewer"
-      },
-      {
-        "timestamp": "2026-08-21T19:26:22Z",
-        "event": "AI Explanation generated and requested by reviewer",
-        "actor": "AI Employee"
       }
     ],
-    "resolved_at": "2026-08-21T19:22:14Z",
-    "resolution_notes": "Manually verified"
+    "resolved_at": "2026-08-21T19:09:26Z",
+    "resolution_notes": "Verified manually"
   },
   {
     "id": "EX-1044",
