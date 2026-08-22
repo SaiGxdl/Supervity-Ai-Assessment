@@ -51,8 +51,9 @@ class DataStore:
         if not item:
             return None
 
+        status_str = new_status.value if hasattr(new_status, "value") else str(new_status)
         now_str = datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ")
-        item["status"] = new_status
+        item["status"] = status_str
         item["resolved_at"] = now_str
         if notes:
             item["resolution_notes"] = notes
@@ -63,7 +64,7 @@ class DataStore:
 
         item["audit_trail"].append({
             "timestamp": now_str,
-            "event": f"Status updated to '{new_status}' ({notes if notes else 'No notes'})",
+            "event": f"Status updated to '{status_str}' ({notes if notes else 'No notes'})",
             "actor": actor
         })
 
