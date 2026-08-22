@@ -557,7 +557,9 @@ export default function ExceptionDetail({
                   <span className="font-bold text-slate-300">{log.actor}</span>
                   <span>{new Date(log.timestamp).toLocaleTimeString()}</span>
                 </div>
-                <div className="text-slate-200 font-medium">{log.event}</div>
+                <div className="text-slate-200 font-medium">
+                  {log.event ? log.event.replace(/ExceptionStatus\./g, '').replace(/PolicyAction\./g, '') : ''}
+                </div>
               </div>
             </div>
           ))}

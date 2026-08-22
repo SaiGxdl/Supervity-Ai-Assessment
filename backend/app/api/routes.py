@@ -145,10 +145,11 @@ def auto_resolve_exception(item_id: str):
     policy = item.get("policy_action")
 
     # DETERMINISTIC GUARDRAIL CHECK
+    policy_str = policy.value if hasattr(policy, "value") else str(policy).replace("PolicyAction.", "")
     if conf < ConfidencePolicyEngine.AUTO_RESOLVE_THRESHOLD or policy != PolicyAction.AUTO_RESOLVE:
         blocked_msg = (
             f"AUTO_RESOLVE_ATTEMPT Blocked: confidence {int(conf*100)}% < threshold 90% "
-            f"(Policy action: {policy}). Human reviewer sign-off mandatory."
+            f"(Policy action: {policy_str}). Human reviewer sign-off mandatory."
         )
         data_store.append_audit_log(item_id, blocked_msg, actor="Policy Engine")
         raise HTTPException(
@@ -156,7 +157,7 @@ def auto_resolve_exception(item_id: str):
             detail=(
                 f"Policy Violation: Exception '{item_id}' has confidence score {int(conf*100)}% "
                 f"which is below the auto-resolution policy threshold (≥{int(ConfidencePolicyEngine.AUTO_RESOLVE_THRESHOLD*100)}%). "
-                f"Current policy action is '{policy}'. Human sign-off required."
+                f"Current policy action is '{policy_str}'. Human sign-off required."
             )
         )
 
