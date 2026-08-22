@@ -223,6 +223,39 @@ export default function ExceptionDetail({
             <span className="text-emerald-400">90% Auto-Resolve Target</span>
           </div>
 
+          {/* Visual Confidence Policy Tier Grid */}
+          <div className="grid grid-cols-3 gap-2 pt-2">
+            <div className={`p-2.5 rounded-lg border text-center transition-all ${
+              confidencePct >= 90
+                ? 'bg-emerald-500/20 border-emerald-500/60 shadow-md shadow-emerald-950/50 ring-1 ring-emerald-500/40'
+                : 'bg-slate-950/50 border-slate-800 opacity-60'
+            }`}>
+              <div className="text-[10px] font-mono text-emerald-400 font-bold">Confidence &ge; 90%</div>
+              <div className="text-xs font-extrabold text-emerald-300 mt-0.5 font-mono">AUTO-RESOLVE</div>
+              <div className="text-[9px] text-slate-400 mt-0.5">Automated Execution</div>
+            </div>
+
+            <div className={`p-2.5 rounded-lg border text-center transition-all ${
+              confidencePct >= 70 && confidencePct < 90
+                ? 'bg-amber-500/20 border-amber-500/60 shadow-md shadow-amber-950/50 ring-1 ring-amber-500/40'
+                : 'bg-slate-950/50 border-slate-800 opacity-60'
+            }`}>
+              <div className="text-[10px] font-mono text-amber-400 font-bold">70% &ndash; 89%</div>
+              <div className="text-xs font-extrabold text-amber-300 mt-0.5 font-mono">SUGGEST</div>
+              <div className="text-[9px] text-slate-400 mt-0.5">Human Approval Req.</div>
+            </div>
+
+            <div className={`p-2.5 rounded-lg border text-center transition-all ${
+              confidencePct < 70
+                ? 'bg-rose-500/20 border-rose-500/60 shadow-md shadow-rose-950/50 ring-1 ring-rose-500/40'
+                : 'bg-slate-950/50 border-slate-800 opacity-60'
+            }`}>
+              <div className="text-[10px] font-mono text-rose-400 font-bold">&lt; 70%</div>
+              <div className="text-xs font-extrabold text-rose-300 mt-0.5 font-mono">HUMAN REVIEW</div>
+              <div className="text-[9px] text-slate-400 mt-0.5">Full Manual Audit</div>
+            </div>
+          </div>
+
           {/* Deterministic Factor Formula Breakdown */}
           <div className="pt-1 flex flex-wrap items-center gap-1.5 text-[10px] font-mono text-slate-400">
             <span className="text-slate-500 font-semibold uppercase tracking-wider text-[9px]">Calculated via Rules:</span>
