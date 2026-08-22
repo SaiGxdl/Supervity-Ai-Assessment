@@ -42,11 +42,11 @@ Key capabilities:
          │                   │
          └─────────┬─────────┘
                    ▼
-           ┌───────────────┐
-           │ OpenAI / LLM  │
-           │ Explanation & │
-           │ Recommendation│
-           └───────────────┘
+           ┌─────────────────────────────┐
+           │ Google Gemini LLM           │
+           │ (google-genai SDK)          │
+           │ + Grounded Fallback Engine  │
+           └─────────────────────────────┘
 ```
 
 ---
@@ -56,6 +56,7 @@ Key capabilities:
 ### A. Separation of Control vs. Intelligence & State
 - **Python = Control**: Enforces variance math, exception classification, and strict confidence policy guardrails ($\ge 90\%$ auto-resolution). The LLM does **NOT** decide auto-resolution eligibility.
 - **LLM = Intelligence**: Generates structured, plain-English root cause explanations citing line-item evidence and handles contextual Q&A chat.
+  - **Dual-Mode LLM Engine**: Uses **Google Gemini 3.6-flash** (`google-genai` SDK) when `GEMINI_API_KEY` is present. If no key is set or if an API timeout occurs, it seamlessly activates a **Deterministic Grounded Fallback Engine** that synthesizes structured root causes and recommended actions directly from verified line-item facts with zero hallucinations and 100% offline uptime.
 - **JSON = State**: The prototype uses JSON persistence for simplicity and reproducibility; the data-store layer can be replaced with SQLite or another persistent datastore in a production implementation.
 
 ### B. Deterministic Confidence Score Formula
@@ -67,7 +68,7 @@ $$\text{Confidence} = \text{Base (80\%)} + \text{Line-Item Evidence (+5\%)} + \t
 
 ## 🛠️ 5. Tech Stack
 
-- **Backend**: Python 3.10+, FastAPI, Pydantic, OpenAI API / Fallback Engine, Uvicorn
+- **Backend**: Python 3.10+, FastAPI, Pydantic, Google Gemini API (`google-genai`) / Grounded Fallback Engine, Uvicorn
 - **Frontend**: React 18, Vite, Lucide Icons, Recharts, Vanilla CSS Glassmorphism
 - **Persistence**: File-backed JSON data store with instant 1-click baseline state reset
 
