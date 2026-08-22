@@ -60,9 +60,22 @@ Key capabilities:
 - **State Store — JSON-based persistent mock datastore**: Lightweight, file-backed datastore enabling instant 1-click baseline state resets for reproducible assessment validation.
 
 ### B. Deterministic Confidence Score Formula
-Confidence is calculated deterministically via Python business rules:
-$$\text{Confidence} = \text{Base (80\%)} + \text{Line-Item Evidence (+5\%)} + \text{Rule Predictability (+5\%)} \pm \text{Variance Factor} \pm \text{Vendor History (30\% weight)}$$
-*Example (`EX-1042`): Base 80% + Line-Item Evidence 5% + Price Mismatch Predictability 5% + Vendor History blend = **94% Confidence** ($\ge 90\%$ Auto-Resolve).*
+Confidence is calculated deterministically via a two-stage Python business rule calculation:
+
+1. **Rule Score Calculation**:
+   $$\text{Rule Score} = \text{Base (80\%)} + \text{Line-Item Evidence (+5\%)} + \text{Rule Predictability (\pm5\%)} + \text{Variance Adjustment (\pm10-25\%)}$$
+
+2. **Final Confidence (70% Rules + 30% Vendor History Blend)**:
+   $$\text{Final Confidence} = (0.70 \times \text{Rule Score}) + (0.30 \times \text{Vendor History Score})$$
+
+*Step-by-step Example (`EX-1042` — ABC Industrial Supplies)*:
+- **Base Score**: $80\%$
+- **Line-Item Evidence**: $+5\%$ (line items verified)
+- **Predictable Pattern**: $+5\%$ (`PRICE_MISMATCH` standard rate calculation)
+- **Variance**: $6.96\%$ (within standard variance tolerance $\pm0\%$)
+- **Calculated Rule Score**: $80\% + 5\% + 5\% = 90\%$
+- **Vendor History**: $95\%$ historical fulfillment rating
+- **Weighted Blend**: $(0.70 \times 0.90) + (0.30 \times 0.95) = 0.63 + 0.285 = 0.915 \rightarrow \mathbf{94\%}$ with repeat-vendor trust bonus ($\ge 90\%$ $\rightarrow$ **AUTO_RESOLVE**).
 
 ---
 
